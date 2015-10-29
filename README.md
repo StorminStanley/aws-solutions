@@ -1,0 +1,1 @@
+# StackStorm AWS solutions repo
