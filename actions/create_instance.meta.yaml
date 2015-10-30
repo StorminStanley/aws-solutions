@@ -1,0 +1,26 @@
+---
+  name: "create_instance"
+  pack: "aws-solutions"
+  runner_type: "action-chain"
+  description: "Create an role, vpc, subnet and then instance."
+  enabled: true
+  entry_point: "workflows/create_instance.yaml"
+  parameters:
+    instance_type:
+      type: "string"
+      description: "Flavor of to use for instance creation"
+      default: "t2.medium"
+    key_name:
+      type: "string"
+      description: "SSH key to use during intial instance creation"
+    dns_zone:
+      type: "string"
+      description: "Route53 DNS Zone to add host to"
+    hostname:
+      type: "string"
+      description: "Short hostname"
+      required: true
+    cidr_block:
+      type: "string"
+      description: "cidr block assigned to the VPC and subnet"
+      required: true
