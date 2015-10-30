@@ -1,0 +1,52 @@
+---
+  chain:
+    -
+      name: "create_vpc"
+      ref: "aws.vpc_create_vpc"
+      params:
+        cidr_block: "{{cidr_block}}"
+      publish:
+        vpc_id: "{{create_vpc.result[0][0].id}}"
+      on-success: "create_subnet"
+    -
+      name: "create_subnet"
+      ref: "aws.vpc_create_subnet"
+      params:
+        cidr_block: "{{cidr_block}}"
+        vpc_id: "{{vpc_id}}"
+      publish:
+        subnet_id: "{{create_subnet.result[0][0].id}}"
+      on-success: "run_instance"
+    -
+      name: "run_instance"
+      ref: "aws.ec2_run_instances"
+      params:
+        image_id: "{{ami}}"
+        instance_type: "{{instance_type}}"
+        subnet_id: "{{subnet_id}}"
+        key_name: "{{key_name}}"
+      publish:
+        instance_id: "{{run_instance.result[0][0].id}}"
+        private_dns_name: "{{run_instance.result[0][0].private_dns_name}}"
+      on-success: "wait_for_instance"
+    -
+      name: "wait_for_instance"
+      ref: "aws.ec2_wait_for_state"
+      params:
+        instance_id: "{{instance_id}}"
+        state: "running"
+    -
+      name: "add_name_tag"
+      ref: "aws.ec2_create_tags"
+      params:
+        resource_ids: "{{instance_id}}"
+        tags: "Name={{hostname}}"
+      on-success: "add_cname"
+    -
+      name: "add_cname"
+      ref: "aws.r53_zone_add_cname"
+      params:
+        name: "{{hostname}}.{{dns_zone}}"
+        value: "{{private_dns_name}}"
+        zone: "{{dns_zone}}"
+      on-success: "set_hostname"
