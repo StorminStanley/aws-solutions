@@ -6,7 +6,7 @@
       params:
         cidr_block: "{{cidr_block}}"
       publish:
-        vpc_id: "{{create_vpc.result | replace('[VPC:', '') | replace(']', '')}}"
+        vpc_id: "{{create_vpc.result[0].id}}"
       on-success: "create_subnet"
     -
       name: "create_subnet"
@@ -15,7 +15,7 @@
         cidr_block: "{{cidr_block}}"
         vpc_id: "{{vpc_id}}"
       publish:
-        subnet_id: "{{create_subnet.result | replace('[Subnet:', '') | replace(']', '')}}"
+        subnet_id: "{{create_subnet.result[0].id}}"
       on-success: "run_instance"
     -
       name: "run_instance"
