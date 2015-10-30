@@ -37,6 +37,7 @@
       params:
         instance_id: "{{instance_id}}"
         state: "running"
+      on-success: "add_name_tag"
     -
       name: "add_name_tag"
       ref: "aws.ec2_create_tags"
@@ -51,4 +52,3 @@
         name: "{{hostname}}.{{dns_zone}}"
         value: "{{private_dns_name}}"
         zone: "{{dns_zone}}"
-      on-success: "set_hostname"
