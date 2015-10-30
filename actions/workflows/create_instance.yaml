@@ -21,10 +21,12 @@
       name: "run_instance"
       ref: "aws.ec2_run_instances"
       params:
-        image_id: "{{ami}}"
+        image_id: "{{ami_id}}"
         instance_type: "{{instance_type}}"
         subnet_id: "{{subnet_id}}"
         key_name: "{{key_name}}"
+        max_count: "1"
+        min_count: "1"
       publish:
         instance_id: "{{run_instance.result[0][0].id}}"
         private_dns_name: "{{run_instance.result[0][0].private_dns_name}}"
