@@ -6,6 +6,10 @@
   enabled: true
   entry_point: "workflows/create_instance.yaml"
   parameters:
+    ami_id:
+      type: "string"
+      description: "AMI id"
+      required: true
     instance_type:
       type: "string"
       description: "Flavor of to use for instance creation"
